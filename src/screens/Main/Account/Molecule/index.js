@@ -95,7 +95,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     paddingVertical: heightDP(20),
-    paddingHorizontal: widthDP(10),
   },
   imagevie: {width: widthDP(30), height: widthDP(30)},
   iconContainer: {

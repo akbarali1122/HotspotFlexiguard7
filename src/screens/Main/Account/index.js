@@ -11,18 +11,12 @@ import {Images} from '../../../assets/images/pngs';
 import AppItem from './Molecule';
 import {useNavigation} from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
+import ScreenWrapper from '../../../components/Layout/ScreenWrapper';
 
 const Account = () => {
   const navigation = useNavigation();
   return (
-    <LinearGradient
-      colors={['#0E1E2E', '#0E1E2E', '#259CDA']}
-      start={{x: 0, y: 0}}
-      end={{x: 0, y: 0}}
-      style={{
-        flex: 1,
-        paddingHorizontal: widthDP(20),
-      }}>
+    <ScreenWrapper color1="#0E1E2E" color2="#0E1E2E" color3="#0E1E2E">
       <CustomHeader />
       <TouchableOpacity
         style={styles.profile}
@@ -50,7 +44,7 @@ const Account = () => {
         />
       </TouchableOpacity>
       <AppItem />
-    </LinearGradient>
+    </ScreenWrapper>
   );
 };
 

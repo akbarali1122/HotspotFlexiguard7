@@ -81,8 +81,13 @@ const Home = () => {
     }
   };
 
+  //'#164958', '#0E1E2E', '#0E1E2E'
   return (
     <ScreenWrapper
+      color1="#164958"
+      color2="#0E1E2E"
+      color3="#0E1E2E"
+      isHomeScreen
       isHeader
       source={isClicked ? Images.ball : Images.vip}
       title={

@@ -12,6 +12,7 @@ import CustomText from '../../../components/Layout/CusromText/CustomText';
 import {Fonts} from '../../../utils/fonts';
 import CustomButton from '../../../components/Layout/CustomButton/CustomButton';
 import LinearGradient from 'react-native-linear-gradient';
+import ScreenWrapper from '../../../components/Layout/ScreenWrapper';
 
 const EditProfile = () => {
   const inputPropsArray = [
@@ -33,14 +34,7 @@ const EditProfile = () => {
   ];
 
   return (
-    <LinearGradient
-      colors={['#0E1E2E', '#0E1E2E', '#259CDA']}
-      start={{x: 0, y: 0}}
-      end={{x: 0, y: 0}}
-      style={{
-        flex: 1,
-        paddingHorizontal: widthDP(20),
-      }}>
+    <ScreenWrapper color1="#0E1E2E" color2="#0E1E2E" color3="#0E1E2E">
       <CustomHeader />
       <View style={styles.imagview}>
         <CustomImage
@@ -64,17 +58,21 @@ const EditProfile = () => {
                 label={item.label}
                 color={COLORS.white}
                 fontSize={14}
-                marginLeft={widthDP(20)}
+                marginLeft={widthDP(10)}
                 marginBottom={heightDP(20)}
                 fontFamily={Fonts.PoppinsRegular}
               />
-              <CustomInput placeholder={item.placeholder} />
+              <CustomInput placeholder={item.placeholder} width={'100%'} />
             </View>
           );
         })}
-        <CustomButton title={'Update'} marginTop={heightDP(20)} />
+        <CustomButton
+          title={'Update'}
+          marginTop={heightDP(20)}
+          width={'100%'}
+        />
       </View>
-    </LinearGradient>
+    </ScreenWrapper>
   );
 };
 

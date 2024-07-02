@@ -11,6 +11,7 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 import CustomText from '../../../components/Layout/CusromText/CustomText';
 import {Fonts} from '../../../utils/fonts';
 import LinearGradient from 'react-native-linear-gradient';
+import ScreenWrapper from '../../../components/Layout/ScreenWrapper';
 
 const SelectServer = () => {
   const [selectedServer, setSelectedServer] = useState(null);
@@ -40,14 +41,7 @@ const SelectServer = () => {
   };
 
   return (
-    <LinearGradient
-      colors={['#0E1E2E', '#0E1E2E', '#259CDA']}
-      start={{x: 0, y: 0}}
-      end={{x: 0, y: 0}}
-      style={{
-        flex: 1,
-        paddingHorizontal: widthDP(30),
-      }}>
+    <ScreenWrapper color1="#0E1E2E" color2="#0E1E2E" color3="#0E1E2E">
       <CustomHeader title={'Select Location'} />
       <CustomText
         label={'Select Server'}
@@ -57,9 +51,9 @@ const SelectServer = () => {
         marginTop={heightDP(40)}
       />
       <FlatList
+        nestedScrollEnabled={true}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{marginTop: heightDP(20), paddingBottom: '20%'}}
-        nestedScrollEnabled={true}
         data={countryArray}
         keyExtractor={(item, index) => index?.toString()}
         renderItem={({item, index}) => {
@@ -78,7 +72,7 @@ const SelectServer = () => {
           );
         }}
       />
-    </LinearGradient>
+    </ScreenWrapper>
   );
 };
 
