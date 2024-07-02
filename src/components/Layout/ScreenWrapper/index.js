@@ -25,18 +25,25 @@ const ScreenWrapper = ({
   source,
   title,
   subtitle,
+  color1,
+  color2,
+  color3,
+  isHomeScreen,
 }) => {
   const navigation = useNavigation();
   return (
     <LinearGradient
-      colors={['#259CDA', '#0E1E2E', '#0E1E2E']}
+      colors={[color1, color2, color3]}
       start={{x: 1, y: 0}}
-      end={{x: 0, y: 1}}
+      end={{x: 1, y: 0.5}}
       style={{
         flex: 1,
         paddingHorizontal: widthDP(20),
       }}>
-      <StatusBar barStyle="light-content" backgroundColor={COLORS.gray1} />
+      <StatusBar
+        barStyle="light-content"
+        backgroundColor={isHomeScreen ? '#164958' : '#0E1E2E'}
+      />
       {isHeader && (
         <View style={styles.View1}>
           <TouchableOpacity
@@ -62,6 +69,7 @@ const ScreenWrapper = ({
         </View>
       )}
       <KeyboardAwareScrollView
+        nestedScrollEnabled={true}
         scrollEnabled={scrollEnabled}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={[
@@ -73,22 +81,24 @@ const ScreenWrapper = ({
         {children}
       </KeyboardAwareScrollView>
 
-      <TouchableOpacity style={styles.bottomView} onPress={onPress}>
-        <View style={styles.Imageview}>
-          <CustomImage source={source} style={styles.vipImage} />
-        </View>
-        <View>
-          <CustomText label={title} color={COLORS.white} fontSize={16} />
-          <CustomText label={subtitle} color={COLORS.white} fontSize={10} />
-        </View>
-        <Icons
-          family="AntDesign"
-          name="right"
-          size={13}
-          color={COLORS.white}
-          style={styles.rightIcon}
-        />
-      </TouchableOpacity>
+      {isHomeScreen && (
+        <TouchableOpacity style={styles.bottomView} onPress={onPress}>
+          <View style={styles.Imageview}>
+            <CustomImage source={source} style={styles.vipImage} />
+          </View>
+          <View>
+            <CustomText label={title} color={COLORS.white} fontSize={16} />
+            <CustomText label={subtitle} color={COLORS.white} fontSize={10} />
+          </View>
+          <Icons
+            family="AntDesign"
+            name="right"
+            size={13}
+            color={COLORS.white}
+            style={styles.rightIcon}
+          />
+        </TouchableOpacity>
+      )}
 
       {/* <Spacer /> */}
     </LinearGradient>
