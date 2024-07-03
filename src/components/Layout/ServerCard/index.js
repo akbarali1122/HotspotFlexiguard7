@@ -91,9 +91,10 @@ const styles = StyleSheet.create({
     flex: 1,
     borderWidth: 1,
     borderColor: 'white',
-    paddingHorizontal: 10,
+    paddingHorizontal: widthDP(10),
     justifyContent: 'center',
-    paddingVertical: 5,
+    paddingVertical: heightDP(10),
+    borderRadius: 8,
   },
   mainContainer: {
     flexDirection: 'row',

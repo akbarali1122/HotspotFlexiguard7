@@ -5,6 +5,7 @@ import {heightDP, widthDP} from '../../../utils/Responsive';
 import Icons from '../CustomIcons/Icons';
 import CustomButton from '../CustomButton/CustomButton';
 import {Fonts} from '../../../utils/fonts';
+import {COLORS} from '../../../utils/config';
 
 const CustomInput = ({
   placeholder,
@@ -71,10 +72,13 @@ const CustomInput = ({
       {withLabel && (
         <CustomText
           textStyle={labelStyle}
-          fontSize={12}
-          color={'red'}
+          fontSize={14}
+          fontFamily={Fonts.PoppinsRegular}
+          color={COLORS.white}
           label={withLabel}
-          marginTop={heightDP(12)}
+          marginTop={heightDP(16)}
+          marginBottom={heightDP(12)}
+          marginLeft={widthDP(22)}
         />
       )}
       {label && (

@@ -3,7 +3,8 @@ import {useNavigation} from '@react-navigation/native';
 import {ValidPassword, ValidateEmail} from '../../../utils/constants';
 import AuthWrapper from '../../../components/Layout/AuthWrapper';
 import CustomInput from '../../../components/Layout/CustomInput/CustomInput';
-import { heightDP } from '../../../utils/Responsive';
+import {heightDP} from '../../../utils/Responsive';
+import {COLORS} from '../../../utils/config';
 
 const Login = () => {
   const navigation = useNavigation();
@@ -17,6 +18,7 @@ const Login = () => {
     {
       id: 1,
       placeholder: 'Email',
+      withLabel: 'Email',
       value: userName,
       onChangeText: val => {
         setUserName(val);
@@ -27,6 +29,7 @@ const Login = () => {
     {
       id: 2,
       placeholder: 'Password',
+      withLabel: 'Password',
       secureTextEntry: true,
       value: password,
       onChangeText: val => {
@@ -54,25 +57,23 @@ const Login = () => {
   };
 
   return (
-    <AuthWrapper
-      onPress={handleLogin}
-      title="Sign In"
-      buttonTitle="Sign In"
-      >
+    <AuthWrapper onPress={handleLogin} title="Sign In" buttonTitle="Sign In">
       {inputPropsArray.map((item, index) => {
         return (
           <CustomInput
             key={item.id}
             placeholder={item.placeholder}
-            marginTop={heightDP(index === 0 ? 40 : 20)}
+            // marginTop={heightDP(index === 0 ? 40 : 20)}
             secureTextEntry={item.secureTextEntry}
             value={item.value}
             onChangeText={item.onChangeText}
             errorMessage={item.errorMessage}
+            borderRadius={5}
+            borderColor={COLORS.alphaBlue}
+            withLabel={item.withLabel}
           />
         );
       })}
-   
     </AuthWrapper>
   );
 };

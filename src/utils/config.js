@@ -6,14 +6,14 @@ export const COLORS = {
   darkRed: '#DC4D0B',
   lightGray: '#757575',
   darkGray: '#5B5B5B',
-  orange:'#DC4D0B',
-  gray1:'#333333',
-  grayPrimary:'#8A8A8A',
-  lightwhite:'#D9D9D9',
-  black1:'#535763',
-  lightorang:'#F3CCBA',
-  theme:'#259CDA'
-  
+  orange: '#DC4D0B',
+  gray1: '#333333',
+  grayPrimary: '#8A8A8A',
+  lightwhite: '#D9D9D9',
+  black1: '#535763',
+  lightorang: '#F3CCBA',
+  theme: '#259CDA',
+  alphaBlue: '#375876',
 };
 
 // export const Images = {
