@@ -38,7 +38,7 @@ const ScreenWrapper = ({
       end={{x: 1, y: 0.5}}
       style={{
         flex: 1,
-        paddingHorizontal: widthDP(20),
+        // paddingHorizontal: widthDP(20),
       }}>
       <StatusBar
         barStyle="light-content"
@@ -83,12 +83,20 @@ const ScreenWrapper = ({
 
       {isHomeScreen && (
         <TouchableOpacity style={styles.bottomView} onPress={onPress}>
-          <View style={styles.Imageview}>
-            <CustomImage source={source} style={styles.vipImage} />
-          </View>
-          <View>
-            <CustomText label={title} color={COLORS.white} fontSize={16} />
-            <CustomText label={subtitle} color={COLORS.white} fontSize={10} />
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <View style={styles.Imageview}>
+              <CustomImage source={source} style={styles.vipImage} />
+            </View>
+            <View style={{marginLeft: widthDP(10)}}>
+              <CustomText label={title} color={COLORS.white} fontSize={16} />
+              {subtitle && (
+                <CustomText
+                  label={subtitle}
+                  color={COLORS.white}
+                  fontSize={10}
+                />
+              )}
+            </View>
           </View>
           <Icons
             family="AntDesign"
@@ -128,21 +136,20 @@ const styles = StyleSheet.create({
   View1: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: widthDP(30),
+    paddingHorizontal: widthDP(20),
     marginTop: heightDP(20),
     marginBottom: heightDP(10),
   },
   bottomView: {
     height: heightDP(80),
-    width: '100%',
     backgroundColor: '#259CDA',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    alignSelf: 'center',
+    paddingHorizontal: widthDP(20),
     borderRadius: 20,
     marginBottom: heightDP(40),
+    marginHorizontal: widthDP(20),
   },
   vipImage: {
     width: widthDP(25),
@@ -151,7 +158,7 @@ const styles = StyleSheet.create({
   },
   Imageview: {
     width: widthDP(40),
-    height: heightDP(30),
+    height: widthDP(40),
     backgroundColor: COLORS.black,
     alignItems: 'center',
     justifyContent: 'center',

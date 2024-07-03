@@ -19,17 +19,17 @@ const EditProfile = () => {
     {
       id: 1,
       placeholder: 'Name',
-      label: 'Name',
+      withLabel: 'Name',
     },
     {
       id: 2,
       placeholder: 'Passwordyourname@email.com',
-      label: 'Email',
+      withLabel: 'Email',
     },
     {
       id: 3,
       placeholder: '0123456789',
-      label: 'Phone',
+      withLabel: 'Phone',
     },
   ];
 
@@ -54,23 +54,16 @@ const EditProfile = () => {
         {inputPropsArray.map(item => {
           return (
             <View key={item.id} style={styles.inputContainer}>
-              <CustomText
-                label={item.label}
-                color={COLORS.white}
-                fontSize={14}
-                marginLeft={widthDP(10)}
-                marginBottom={heightDP(20)}
-                fontFamily={Fonts.PoppinsRegular}
+              <CustomInput
+                placeholder={item.placeholder}
+                borderRadius={5}
+                borderColor={COLORS.alphaBlue}
+                withLabel={item.withLabel}
               />
-              <CustomInput placeholder={item.placeholder} width={'100%'} />
             </View>
           );
         })}
-        <CustomButton
-          title={'Update'}
-          marginTop={heightDP(20)}
-          width={'100%'}
-        />
+        <CustomButton title={'Update'} marginTop={heightDP(40)} />
       </View>
     </ScreenWrapper>
   );
@@ -95,6 +88,6 @@ const styles = StyleSheet.create({
     right: -5,
   },
   inputContainer: {
-    marginBottom: heightDP(15), // Adjust this value for desired margin
+    // Adjust this value for desired margin
   },
 });
