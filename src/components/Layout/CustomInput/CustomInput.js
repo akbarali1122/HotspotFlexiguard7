@@ -209,6 +209,7 @@ const CustomInput = ({
             fontFamily={Fonts.PoppinsRegular}
             marginTop={heightDP(5)}
             textStyle={textStyle}
+            marginLeft={heightDP(6)}
           />
         </View>
       ) : null}

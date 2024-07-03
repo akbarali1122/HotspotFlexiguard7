@@ -29,6 +29,7 @@ const ScreenWrapper = ({
   color2,
   color3,
   isHomeScreen,
+  isClicked,
 }) => {
   const navigation = useNavigation();
   return (
@@ -126,12 +127,10 @@ const styles = StyleSheet.create({
   icon: {
     height: widthDP(40),
     width: widthDP(40),
-    alignSelf: 'center',
   },
   icon1: {
     height: widthDP(30),
     width: widthDP(30),
-    alignSelf: 'center',
   },
   View1: {
     flexDirection: 'row',
