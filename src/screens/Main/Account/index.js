@@ -12,22 +12,30 @@ import AppItem from './Molecule';
 import {useNavigation} from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
 import ScreenWrapper from '../../../components/Layout/ScreenWrapper';
+import Icons from '../../../components/Layout/CustomIcons/Icons';
 
 const Account = () => {
   const navigation = useNavigation();
   return (
     <ScreenWrapper color1="#0E1E2E" color2="#0E1E2E" color3="#0E1E2E">
       <CustomHeader />
-      <TouchableOpacity
-        style={styles.profile}
-        onPress={() => navigation.navigate('EditProfile')}>
-        <View style={styles.imagview}>
+      <View style={styles.profile}>
+        <TouchableOpacity
+          style={styles.imagview}
+          onPress={() => navigation.navigate('EditProfile')}>
           <CustomImage
             source={Images.profile}
             resizeMode="contain"
             style={{height: '100%', width: '100%'}}
           />
-        </View>
+          <Icons
+            name="pencil"
+            family="Octicons"
+            size={20}
+            color={COLORS.white}
+            style={styles.cameraIcon}
+          />
+        </TouchableOpacity>
 
         <CustomText
           label={'Haroon Hussain'}
@@ -42,7 +50,7 @@ const Account = () => {
           color={COLORS.white}
           marginTop={heightDP(5)}
         />
-      </TouchableOpacity>
+      </View>
       <AppItem />
     </ScreenWrapper>
   );
@@ -60,5 +68,17 @@ const styles = StyleSheet.create({
   profile: {
     alignItems: 'center',
     marginTop: heightDP(40),
+  },
+  cameraIcon: {
+    position: 'absolute',
+    backgroundColor: COLORS.theme,
+    borderRadius: 100, // Update this to half of the width/height to make it circular
+    width: widthDP(40), // Make sure the width and height are the same to create a circle
+    height: widthDP(40),
+    padding: 7, // Optional: Adjust padding if necessary
+    bottom: -10,
+    right: -5,
+    alignItems: 'center', // Center the icon horizontally
+    justifyContent: 'center',
   },
 });

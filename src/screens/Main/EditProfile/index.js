@@ -46,7 +46,7 @@ const EditProfile = () => {
           name="camera-iris"
           family="MaterialCommunityIcons"
           size={30}
-          color={COLORS.black}
+          color={COLORS.white}
           style={styles.cameraIcon}
         />
       </View>

@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
     width: widthDP(70),
     height: widthDP(70),
     alignSelf: 'center',
-    marginTop: heightDP(60),
+    marginTop: heightDP(80),
     marginBottom: heightDP(50),
   },
   centeredBox: {

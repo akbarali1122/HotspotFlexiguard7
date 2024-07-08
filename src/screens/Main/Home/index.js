@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {
   ActivityIndicator,
   Dimensions,
@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
 import ScreenWrapper from '../../../components/Layout/ScreenWrapper';
 import CustomText from '../../../components/Layout/CusromText/CustomText';
 import {COLORS} from '../../../utils/config';
@@ -22,26 +23,39 @@ import RNSimpleOpenvpn, {
 } from 'react-native-simple-openvpn';
 import {ovpnFile} from '../../../utils/constants';
 import Ping from 'react-native-ping';
+import {
+  setCheckVPNConnect,
+  setDownLoadSpeed,
+  setUpLoadSpeed,
+  startTimer,
+  stopTimer,
+  incrementTimer,
+  setLoading,
+  setSeletedServer,
+} from '../../../redux/userSlice/user.Slice';
 
 const Home = () => {
   const navigation = useNavigation();
   const route = useRoute();
-  const [timer, setTimer] = useState(0);
-  const [isRunning, setIsRunning] = useState(false);
-  const [connectLoading, setConnectLoading] = useState(false);
-  const [selectedServer, setSelectedServer] = useState(null);
-  const [receivedNetworkSpeed, setReceivedNetworkSpeed] = useState(null);
-  const [sendNetworkSpeed, setSendNetworkSpeed] = useState(null);
-  const [speedLoading, setSpeedLoading] = useState(false);
-  const [isClicked, setIsClicked] = useState(false);
+  const dispatch = useDispatch();
   const intervalRef = useRef(null);
-  const speedIntervalRef = useRef(null);
+
+  // Redux state
+  const {
+    checkVPNConnect,
+    timerRunning,
+    timerValue,
+    downloadSpeed,
+    uploadSpeed,
+    connectLoading,
+    selectedServer,
+  } = useSelector(state => state.user);
+
   const isIPhone = /iPhone/.test(Dimensions.get('window').model);
 
   useEffect(() => {
     if (route.params?.selectedServer) {
-      setSelectedServer(route.params.selectedServer);
-      setIsClicked(true);
+      dispatch(setSeletedServer(route.params.selectedServer));
     }
   }, [route.params?.selectedServer]);
 
@@ -52,110 +66,133 @@ const Home = () => {
       }
 
       addVpnStateListener(e => {
-        // Handle VPN state changes here
         console.log('VPN State:', e);
+        dispatch(setCheckVPNConnect(e));
       });
     }
 
     observeVpn();
 
-    return async () => {
+    return () => {
       if (isIPhone) {
-        await RNSimpleOpenvpn.stopObserveState();
+        RNSimpleOpenvpn.stopObserveState();
       }
 
       removeVpnStateListener();
     };
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
-    return () => stopTimer();
-  }, []);
+    if (checkVPNConnect?.message === 'CONNECTED') {
+      dispatch(setLoading(false));
+      if (!timerRunning) {
+        startTimerHandler();
+      }
+    } else if (
+      checkVPNConnect?.message === 'CONNECTRETRY' ||
+      checkVPNConnect?.message === 'NOPROCESS'
+    ) {
+      dispatch(setLoading(false));
+      stopTimerHandler();
+      dispatch(setDownLoadSpeed(null));
+      dispatch(setUpLoadSpeed(null));
+    }
+  }, [checkVPNConnect, timerRunning, dispatch]);
 
-  const startTimer = () => {
-    setIsRunning(true);
-    intervalRef.current = setInterval(() => {
-      setTimer(prev => prev + 1);
-    }, 1000);
+  useEffect(() => {
+    if (checkVPNConnect?.message === 'CONNECTED') {
+      getTrafficStats();
+    }
+  }, [checkVPNConnect, downloadSpeed, uploadSpeed]);
+
+  const startTimerHandler = () => {
+    if (!timerRunning) {
+      dispatch(startTimer());
+      intervalRef.current = setInterval(() => {
+        dispatch(incrementTimer());
+      }, 1000);
+    }
   };
 
-  const stopTimer = () => {
-    setIsRunning(false);
+  const stopTimerHandler = () => {
+    dispatch(stopTimer());
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
     }
-    if (speedIntervalRef.current) {
-      clearInterval(speedIntervalRef.current);
-    }
-    setTimer(0);
-    setReceivedNetworkSpeed(null);
-    setSendNetworkSpeed(null);
   };
 
   const getTrafficStats = async () => {
     try {
       const {receivedNetworkSpeed, sendNetworkSpeed} =
         await Ping.getTrafficStats();
-      setReceivedNetworkSpeed(receivedNetworkSpeed);
-      setSendNetworkSpeed(sendNetworkSpeed);
+      // console.log('Received Network Speed:', receivedNetworkSpeed);
+      // console.log('Send Network Speed:', sendNetworkSpeed);
+      dispatch(setDownLoadSpeed(receivedNetworkSpeed));
+      dispatch(setUpLoadSpeed(sendNetworkSpeed));
     } catch (error) {
       console.error('Error fetching traffic stats:', error);
     }
   };
 
   const startOvpn = async () => {
+    dispatch(setLoading(true));
     try {
-      setConnectLoading(true);
       await RNSimpleOpenvpn.connect({
         ovpnString: ovpnFile,
+        notificationTitle: 'Flexiguard VPN',
+      }).then(() => {
+        if (checkVPNConnect?.message === 'EXITING') {
+          dispatch(setLoading(false));
+          stopOvpn();
+          dispatch(setCheckVPNConnect(''));
+        } else if (checkVPNConnect?.message === 'CONNECTED') {
+          dispatch(setLoading(false));
+          stopTimerHandler();
+        }
       });
-      setConnectLoading(false);
-      startTimer();
-      setReceivedNetworkSpeed('0.00'); // Initialize to 0.00 Mbps on connect
-      setSendNetworkSpeed('0.00'); // Initialize to 0.00 Mbps on connect
-      speedIntervalRef.current = setInterval(getTrafficStats, 1000); // Poll every second
     } catch (error) {
-      setConnectLoading(false);
-      console.error(error);
+      console.log('error======', error);
+      alert('Please Select Server');
+      dispatch(setLoading(false));
     }
   };
 
   const stopOvpn = async () => {
     try {
-      setConnectLoading(true);
-      await RNSimpleOpenvpn.disconnect();
-      setConnectLoading(false);
-      stopTimer();
-      setReceivedNetworkSpeed(null); // Reset to null on disconnect
-      setSendNetworkSpeed(null); // Reset to null on disconnect
+      await RNSimpleOpenvpn.disconnect().then(() => {
+        setTimeout(() => {
+          dispatch(setLoading(false));
+          dispatch(setDownLoadSpeed(''));
+          dispatch(setUpLoadSpeed(''));
+        }, 2000);
+      });
     } catch (error) {
-      setConnectLoading(false);
-      console.error(error);
+      dispatch(setLoading(false));
     }
+    stopTimerHandler();
   };
 
   const handleIconPress = () => {
-    if (isRunning) {
+    if (checkVPNConnect?.message === 'CONNECTED') {
       stopOvpn();
     } else {
+      dispatch(setLoading(true));
       startOvpn();
-      // navigation.navigate('Ads');
     }
   };
 
   const formatTime = () => {
-    const hours = String(Math.floor(timer / 3600)).padStart(2, '0');
-    const minutes = String(Math.floor((timer % 3600) / 60)).padStart(2, '0');
-    const seconds = String(timer % 60).padStart(2, '0');
+    const hours = String(Math.floor(timerValue / 3600)).padStart(2, '0');
+    const minutes = String(Math.floor((timerValue % 3600) / 60)).padStart(
+      2,
+      '0',
+    );
+    const seconds = String(timerValue % 60).padStart(2, '0');
     return `${hours}:${minutes}:${seconds}`;
   };
 
   const handleNavigationPress = () => {
-    if (isClicked) {
-      navigation.navigate('SelectServer');
-    } else {
-      setIsClicked(true);
-    }
+    navigation.navigate('SelectServer');
   };
 
   return (
@@ -165,17 +202,11 @@ const Home = () => {
       color3="#0E1E2E"
       isHomeScreen
       isHeader
-      source={isClicked ? Images.ball : Images.vip}
-      title={
-        selectedServer
-          ? selectedServer
-          : isClicked
-          ? 'Select Server'
-          : 'Become VIP!'
-      }
-      subtitle={!isClicked && 'Unlock all the servers'}
-      onPress={handleNavigationPress}
-      isClicked={isClicked}>
+      isVipUser
+      source={selectedServer ? Images.ball : Images.vip}
+      title={selectedServer ? selectedServer : 'Select Server'}
+      subtitle={!selectedServer && 'Unlock all the servers'}
+      onPress={handleNavigationPress}>
       <View
         style={{
           height: Dimensions.get('screen').height / 2.2,
@@ -191,7 +222,9 @@ const Home = () => {
         <TouchableOpacity
           style={[
             styles.button,
-            isRunning ? styles.buttonRunning : styles.button,
+            checkVPNConnect?.message === 'CONNECTED'
+              ? styles.buttonRunning
+              : styles.button,
           ]}
           onPress={handleIconPress}>
           {connectLoading ? (
@@ -205,9 +238,9 @@ const Home = () => {
             />
           )}
         </TouchableOpacity>
-        {isRunning ? (
+        {checkVPNConnect?.message === 'CONNECTED' ? (
           <CustomText
-            label={'Status: Connected'}
+            label={`Status: Connected`}
             fontSize={15}
             color={COLORS.white}
             fontFamily={Fonts.PoppinsSemiBold}
@@ -225,12 +258,12 @@ const Home = () => {
           />
         )}
       </View>
-      {isRunning && (
+      {checkVPNConnect?.message === 'CONNECTED' && (
         <SpeedCard
-          receivedNetworkSpeed={receivedNetworkSpeed}
-          sendNetworkSpeed={sendNetworkSpeed}
-          speedLoading={speedLoading}
-          isRunning={isRunning}
+          receivedNetworkSpeed={downloadSpeed}
+          sendNetworkSpeed={uploadSpeed}
+          speedLoading={connectLoading}
+          isRunning={timerRunning}
         />
       )}
     </ScreenWrapper>
