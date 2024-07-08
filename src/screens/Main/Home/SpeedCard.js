@@ -41,13 +41,12 @@ const SpeedCard = ({
         ) : (
           <CustomText
             label={
-              receivedNetworkSpeed
-                ? `${receivedNetworkSpeed} Mbps`
-                : '0.00 Mbps'
+              receivedNetworkSpeed ? `${receivedNetworkSpeed} ` : '0.00 Mbps'
             }
             fontFamily={Fonts.PoppinsBold}
             fontSize={14}
-            color={COLORS.gray1}
+            color={COLORS.white}
+            marginLeft={widthDP(6)}
           />
         )}
       </View>
@@ -72,10 +71,11 @@ const SpeedCard = ({
           <ActivityIndicator size="small" color={COLORS.white} />
         ) : (
           <CustomText
-            label={sendNetworkSpeed ? `${sendNetworkSpeed} Mbps` : '0.00 Mbps'}
+            label={sendNetworkSpeed ? `${sendNetworkSpeed} ` : '0.00 Mbps'}
             fontFamily={Fonts.PoppinsSemiBold}
             fontSize={16}
-            color={COLORS.gray1}
+            color={COLORS.white}
+            marginLeft={widthDP(6)}
           />
         )}
       </View>

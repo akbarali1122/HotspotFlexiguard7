@@ -29,7 +29,7 @@ const ScreenWrapper = ({
   color2,
   color3,
   isHomeScreen,
-  isClicked,
+  isVipUser,
 }) => {
   const navigation = useNavigation();
   return (
@@ -57,16 +57,18 @@ const ScreenWrapper = ({
               style={styles.icon}
             />
           </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              // navigation.navigate('Account');
-            }}>
-            <CustomImage
-              source={Images.vip}
-              resizeMode="contain"
-              style={styles.icon1}
-            />
-          </TouchableOpacity>
+          {isVipUser && ( // Conditionally render the VIP image
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('SelectServer');
+              }}>
+              <CustomImage
+                source={Images.vip}
+                resizeMode="contain"
+                style={styles.icon1}
+              />
+            </TouchableOpacity>
+          )}
         </View>
       )}
       <KeyboardAwareScrollView
@@ -82,7 +84,7 @@ const ScreenWrapper = ({
         {children}
       </KeyboardAwareScrollView>
 
-      {isHomeScreen && (
+      {/* {isHomeScreen && (
         <TouchableOpacity style={styles.bottomView} onPress={onPress}>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <View style={styles.Imageview}>
@@ -107,7 +109,7 @@ const ScreenWrapper = ({
             style={styles.rightIcon}
           />
         </TouchableOpacity>
-      )}
+      )} */}
 
       {/* <Spacer /> */}
     </LinearGradient>

@@ -6,30 +6,34 @@ import {NavigationContainer} from '@react-navigation/native';
 import AuthStack from './src/navigation/AuthStack';
 import MainStack from './src/navigation/MainStack';
 import SplashScreen from 'react-native-splash-screen';
+import {Provider} from 'react-redux';
+import {store} from './src/redux/store';
 
 const Stack = createNativeStackNavigator();
 
 const App = () => {
-  useEffect(() => {
-    setTimeout(() => {
-      SplashScreen.hide();
-    }, 2000);
-  }, []);
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     SplashScreen.hide();
+  //   }, 2000);
+  // }, []);
   return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen
-          name="AuthStack"
-          component={AuthStack}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="MainStack"
-          component={MainStack}
-          options={{headerShown: false}}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <Provider store={store}>
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen
+            name="AuthStack"
+            component={AuthStack}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="MainStack"
+            component={MainStack}
+            options={{headerShown: false}}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </Provider>
   );
 };
 
