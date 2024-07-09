@@ -1,10 +1,4 @@
-import {
-  SafeAreaView,
-  StatusBar,
-  StyleSheet,
-  View,
-  TouchableOpacity,
-} from 'react-native';
+import {StatusBar, StyleSheet, View, TouchableOpacity} from 'react-native';
 import React from 'react';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {useNavigation} from '@react-navigation/native';
@@ -13,25 +7,23 @@ import CustomImage from '../CustomImage/CustomImage';
 import {heightDP, widthDP} from '../../../utils/Responsive';
 import {COLORS} from '../../../utils/config';
 import LinearGradient from 'react-native-linear-gradient';
-import CustomText from '../CusromText/CustomText';
-import Icons from '../CustomIcons/Icons';
+import {useSelector} from 'react-redux';
 
 const ScreenWrapper = ({
   children,
   scrollEnabled,
   isHeader,
-  onPress,
   paddingBottom,
-  source,
-  title,
-  subtitle,
   color1,
   color2,
   color3,
   isHomeScreen,
-  isVipUser,
+  onVipPress,
 }) => {
   const navigation = useNavigation();
+  const {loginData} = useSelector(state => state.user);
+
+  // console.log('loginData.access_to===', loginData.access_to);
   return (
     <LinearGradient
       colors={[color1, color2, color3]}
@@ -57,11 +49,8 @@ const ScreenWrapper = ({
               style={styles.icon}
             />
           </TouchableOpacity>
-          {isVipUser && ( // Conditionally render the VIP image
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate('SelectServer');
-              }}>
+          {loginData.access_to === 'pro' && (
+            <TouchableOpacity onPress={onVipPress}>
               <CustomImage
                 source={Images.vip}
                 resizeMode="contain"
@@ -83,33 +72,6 @@ const ScreenWrapper = ({
         ]}>
         {children}
       </KeyboardAwareScrollView>
-
-      {/* {isHomeScreen && (
-        <TouchableOpacity style={styles.bottomView} onPress={onPress}>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <View style={styles.Imageview}>
-              <CustomImage source={source} style={styles.vipImage} />
-            </View>
-            <View style={{marginLeft: widthDP(10)}}>
-              <CustomText label={title} color={COLORS.white} fontSize={16} />
-              {subtitle && (
-                <CustomText
-                  label={subtitle}
-                  color={COLORS.white}
-                  fontSize={10}
-                />
-              )}
-            </View>
-          </View>
-          <Icons
-            family="AntDesign"
-            name="right"
-            size={13}
-            color={COLORS.white}
-            style={styles.rightIcon}
-          />
-        </TouchableOpacity>
-      )} */}
 
       {/* <Spacer /> */}
     </LinearGradient>

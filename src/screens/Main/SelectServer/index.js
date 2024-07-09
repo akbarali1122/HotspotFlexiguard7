@@ -12,10 +12,35 @@ import CustomText from '../../../components/Layout/CusromText/CustomText';
 import {Fonts} from '../../../utils/fonts';
 import LinearGradient from 'react-native-linear-gradient';
 import ScreenWrapper from '../../../components/Layout/ScreenWrapper';
+import {
+  setSeletedServer,
+  setVpnServers,
+} from '../../../redux/userSlice/user.Slice';
+import {useDispatch, useSelector} from 'react-redux';
+import {GetOvpnFile} from '../../../services';
 
-const SelectServer = () => {
-  const [selectedServer, setSelectedServer] = useState(null);
+const SelectServer = ({route}) => {
+  const selectedCountry = route?.params?.selectedCountry;
+
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+  const {vpnServers} = useSelector(state => state.user);
+  useEffect(() => {
+    getServers();
+  }, []);
+
+  useEffect(() => {
+    if (selectedCountry?.country) {
+      dispatch(
+        setSeletedServer({
+          id: selectedCountry?.id,
+          country: selectedCountry?.country,
+          flag: selectedCountry?.flag || {},
+          file_name: selectedCountry?.file_name,
+        }),
+      );
+    }
+  }, [selectedCountry]);
 
   const countryArray = [
     {
@@ -34,10 +59,22 @@ const SelectServer = () => {
       flag: Images.ball,
     },
   ];
+  const getServers = async FCM => {
+    try {
+      const res = await GetOvpnFile({device_token: 123});
+      // console.log('res=======', res);
+      dispatch(setVpnServers(res?.data));
+    } catch (error) {
+      console.log('error--======', error);
+    }
+  };
+  const freeServer = vpnServers?.filter(item => item?.access_to === 'premium');
 
-  const handleSelectServer = server => {
-    setSelectedServer(server.title);
-    navigation.navigate('Home', {selectedServer: server.title});
+  const toggleSelection = item => {
+    dispatch(setSeletedServer(item));
+    navigation.navigate('Home', {
+      selectedItem: item,
+    });
   };
 
   return (
@@ -54,19 +91,21 @@ const SelectServer = () => {
         nestedScrollEnabled={true}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{marginTop: heightDP(20), paddingBottom: '20%'}}
-        data={countryArray}
+        data={freeServer}
         keyExtractor={(item, index) => index?.toString()}
         renderItem={({item, index}) => {
-          const isCheck = selectedServer === item.title;
+          const isCheck = selectedCountry?.country === item?.country;
 
           return (
             <View style={{marginVertical: heightDP(15)}}>
               <ServerList
-                flagImage={item.flag}
-                label={item.title}
+                flagImage={{uri: item.flag}}
+                label={item.country}
                 ListIndex={item.title}
                 isSelected={isCheck}
-                onPress={() => handleSelectServer(item)}
+                onPress={() => {
+                  toggleSelection(item);
+                }}
               />
             </View>
           );

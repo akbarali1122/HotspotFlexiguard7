@@ -3,12 +3,16 @@ import React from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {heightDP, widthDP} from '../../../../utils/Responsive';
 import CustomText from '../../../../components/Layout/CusromText/CustomText';
-import CustomImage from '../../../../components/Layout/CustomImage/CustomImage';
 import {COLORS} from '../../../../utils/config';
 import Icons from '../../../../components/Layout/CustomIcons/Icons';
+import {useDispatch, useSelector} from 'react-redux';
+import {setLoading, setLoginData} from '../../../../redux/userSlice/user.Slice';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const AppItem = () => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+  const {loading, loginData} = useSelector(state => state.user);
 
   const data = [
     {
@@ -49,13 +53,13 @@ const AppItem = () => {
     {
       id: 6,
       text: 'Log Out',
-      // onPress: async () => {
-      //   await AsyncStorage.removeItem('isAuth');
-      //   dispatch(setLoginData({}));
-      //   dispatch(setLoading(false));
-      //   setOpenDrawer(false);
-      //   navigation.navigate('AuthStack');
-      // },
+      onPress: async () => {
+        await AsyncStorage.removeItem('isAuth');
+
+        dispatch(setLoginData({}));
+        dispatch(setLoading(false));
+        navigation.navigate('AuthStack');
+      },
     },
   ];
 

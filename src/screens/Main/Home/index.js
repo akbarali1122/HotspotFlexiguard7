@@ -13,7 +13,6 @@ import {COLORS} from '../../../utils/config';
 import {Fonts} from '../../../utils/fonts';
 import {heightDP, widthDP} from '../../../utils/Responsive';
 import Icons from '../../../components/Layout/CustomIcons/Icons';
-import CustomImage from '../../../components/Layout/CustomImage/CustomImage';
 import {Images} from '../../../assets/images/pngs';
 import SpeedCard from './SpeedCard';
 import {useNavigation, useRoute} from '@react-navigation/native';
@@ -21,7 +20,6 @@ import RNSimpleOpenvpn, {
   addVpnStateListener,
   removeVpnStateListener,
 } from 'react-native-simple-openvpn';
-import {ovpnFile} from '../../../utils/constants';
 import Ping from 'react-native-ping';
 import {
   setCheckVPNConnect,
@@ -31,8 +29,9 @@ import {
   stopTimer,
   incrementTimer,
   setLoading,
-  setSeletedServer,
+  setVpnServers,
 } from '../../../redux/userSlice/user.Slice';
+import {GetOvpnFile} from '../../../services';
 
 const Home = () => {
   const navigation = useNavigation();
@@ -40,6 +39,7 @@ const Home = () => {
   const dispatch = useDispatch();
   const intervalRef = useRef(null);
 
+  const selectedItem = route?.params?.selectedItem;
   // Redux state
   const {
     checkVPNConnect,
@@ -49,15 +49,20 @@ const Home = () => {
     uploadSpeed,
     connectLoading,
     selectedServer,
+    vpnServers,
   } = useSelector(state => state.user);
 
   const isIPhone = /iPhone/.test(Dimensions.get('window').model);
 
   useEffect(() => {
-    if (route.params?.selectedServer) {
-      dispatch(setSeletedServer(route.params.selectedServer));
-    }
-  }, [route.params?.selectedServer]);
+    getServers();
+  }, []);
+
+  // useEffect(() => {
+  //   if (route.params?.selectedServer) {
+  //     dispatch(setSeletedServer(route.params.selectedServer));
+  //   }
+  // }, [route.params?.selectedServer]);
 
   useEffect(() => {
     async function observeVpn() {
@@ -133,12 +138,33 @@ const Home = () => {
       console.error('Error fetching traffic stats:', error);
     }
   };
+  const getServers = async FCM => {
+    try {
+      const res = await GetOvpnFile({device_token: 123});
+      // console.log('res=======', res);
+      dispatch(setVpnServers(res?.data));
+    } catch (error) {
+      console.log('error--======', error);
+    }
+  };
+  const freeServer = vpnServers?.find(item => item?.access_to === 'free');
+  // console.log('vpnServers============', vpnServers);
+
+  const handleVPN = () => {
+    if (selectedItem) {
+      alert('selectedItem');
+      return selectedItem?.file_name;
+    } else {
+      alert('freeServer');
+      return freeServer?.file_name;
+    }
+  };
 
   const startOvpn = async () => {
     dispatch(setLoading(true));
     try {
       await RNSimpleOpenvpn.connect({
-        ovpnString: ovpnFile,
+        ovpnString: handleVPN(),
         notificationTitle: 'Flexiguard VPN',
       }).then(() => {
         if (checkVPNConnect?.message === 'EXITING') {
@@ -192,11 +218,14 @@ const Home = () => {
   };
 
   const handleNavigationPress = () => {
-    navigation.navigate('SelectServer');
+    navigation.navigate('SelectServer', {
+      selectedCountry: selectedItem,
+    });
   };
 
   return (
     <ScreenWrapper
+      onVipPress={handleNavigationPress}
       color1="#164958"
       color2="#0E1E2E"
       color3="#0E1E2E"

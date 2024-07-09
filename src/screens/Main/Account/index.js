@@ -1,6 +1,5 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
-import {SafeAreaView} from 'react-native-safe-area-context';
 import {heightDP, widthDP} from '../../../utils/Responsive';
 import CustomHeader from '../../../components/Layout/CustomHeader';
 import CustomText from '../../../components/Layout/CusromText/CustomText';
@@ -10,42 +9,41 @@ import CustomImage from '../../../components/Layout/CustomImage/CustomImage';
 import {Images} from '../../../assets/images/pngs';
 import AppItem from './Molecule';
 import {useNavigation} from '@react-navigation/native';
-import LinearGradient from 'react-native-linear-gradient';
 import ScreenWrapper from '../../../components/Layout/ScreenWrapper';
 import Icons from '../../../components/Layout/CustomIcons/Icons';
+import {useSelector} from 'react-redux';
 
 const Account = () => {
+  const {loginData} = useSelector(state => state.user);
   const navigation = useNavigation();
   return (
     <ScreenWrapper color1="#0E1E2E" color2="#0E1E2E" color3="#0E1E2E">
       <CustomHeader />
       <View style={styles.profile}>
-        <TouchableOpacity
-          style={styles.imagview}
-          onPress={() => navigation.navigate('EditProfile')}>
+        <View style={styles.imagview}>
           <CustomImage
             source={Images.profile}
             resizeMode="contain"
             style={{height: '100%', width: '100%'}}
           />
           <Icons
-            name="pencil"
-            family="Octicons"
-            size={20}
+            name="camera-iris"
+            family="MaterialCommunityIcons"
+            size={30}
             color={COLORS.white}
             style={styles.cameraIcon}
           />
-        </TouchableOpacity>
+        </View>
 
         <CustomText
-          label={'Haroon Hussain'}
+          label={loginData?.name || ''}
           fontFamily={Fonts.PoppinsRegular}
           fontSize={22}
           marginTop={heightDP(14)}
           color={COLORS.white}
         />
         <CustomText
-          label={'test@gmail.com'}
+          label={loginData?.email || ''}
           fontSize={14}
           color={COLORS.white}
           marginTop={heightDP(5)}
@@ -67,18 +65,13 @@ const styles = StyleSheet.create({
   },
   profile: {
     alignItems: 'center',
-    marginTop: heightDP(40),
   },
   cameraIcon: {
     position: 'absolute',
     backgroundColor: COLORS.theme,
-    borderRadius: 100, // Update this to half of the width/height to make it circular
-    width: widthDP(40), // Make sure the width and height are the same to create a circle
-    height: widthDP(40),
-    padding: 7, // Optional: Adjust padding if necessary
+    borderRadius: 15,
+    padding: 2,
     bottom: -10,
     right: -5,
-    alignItems: 'center', // Center the icon horizontally
-    justifyContent: 'center',
   },
 });

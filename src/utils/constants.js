@@ -23,9 +23,10 @@ export const ValidateEmail = email => {
 };
 
 export const ValidPassword = password => {
-  var re =
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$@!%&*?])[A-Za-z\d#$@!%&*?]{8,30}$/;
+  // Define the regular expression
+  var re = /^.{1,9}$/;
 
+  // Test the password against the regular expression
   return re.test(password);
 };
 

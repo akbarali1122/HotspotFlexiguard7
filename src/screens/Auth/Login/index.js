@@ -5,9 +5,16 @@ import AuthWrapper from '../../../components/Layout/AuthWrapper';
 import CustomInput from '../../../components/Layout/CustomInput/CustomInput';
 import {heightDP} from '../../../utils/Responsive';
 import {COLORS} from '../../../utils/config';
+import {useDispatch, useSelector} from 'react-redux';
+import {Platform} from 'react-native';
+import {setLoading, setLoginData} from '../../../redux/userSlice/user.Slice';
+import {LoginUser} from '../../../services';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Login = () => {
   const navigation = useNavigation();
+  const {loading} = useSelector(state => state.user);
+  const dispatch = useDispatch();
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
 
@@ -18,7 +25,6 @@ const Login = () => {
     {
       id: 1,
       placeholder: 'Email',
-      withLabel: 'Email',
       value: userName,
       onChangeText: val => {
         setUserName(val);
@@ -29,7 +35,6 @@ const Login = () => {
     {
       id: 2,
       placeholder: 'Password',
-      withLabel: 'Password',
       secureTextEntry: true,
       value: password,
       onChangeText: val => {
@@ -39,20 +44,59 @@ const Login = () => {
       errorMessage: passwordError,
     },
   ];
-
+  const isAuth = 'Cnl0rzoLbue9HWCX5mIl3zE3gsWioJO6BHGHsMHQo9o5ry1dy6SBeIidJpx9';
   const handleLogin = async () => {
+    const payload = {
+      email: userName,
+      password: password,
+      device_token: Platform.OS === 'ios' ? 123 : 123,
+      // device_type: Platform.OS === 'ios' ? 'ios' : 'android',
+    };
+
     if (!userName) {
       return setUserNameError('Please enter email');
     } else if (!ValidateEmail(userName?.trim())) {
       return setUserNameError('Please enter valid email (example@gmail.com)');
     } else if (!password) {
       return setPasswordError('Please Enter password');
-    } else if (!ValidPassword(password?.trim())) {
+    }
+    // else if (password.length <= 7) {
+    //   return setPasswordError('Password should be greater then 8 letters');
+    // }
+    else if (!ValidPassword(password?.trim())) {
       return setPasswordError('Wrong Password');
     } else {
-      navigation.navigate('MainStack', {
-        screen: 'Home',
-      });
+      dispatch(setLoading(true));
+      await LoginUser(payload)
+        .then(async res => {
+          await AsyncStorage.setItem('isAuth', res?.data?.api_token);
+          dispatch(setLoading(true));
+          console.log('res=======', res);
+          if (res?.status === 'fail') {
+            alert('error', `${res?.message}`);
+          } else {
+            dispatch(setLoginData(res?.data));
+            navigation.reset({
+              index: 0,
+              routes: [
+                {
+                  name: 'MainStack',
+                },
+              ],
+            });
+          }
+          dispatch(setLoading(false));
+        })
+        .catch(error => {
+          dispatch(setLoading(false));
+          console.log('error==========', error);
+          if (error.code === 'ERR_NETWORK') {
+            alert('error', 'Network request failed. Please try again later');
+          } else if (error) {
+            alert('error', `Invalid email or password`);
+          }
+        });
+      dispatch(setLoading(false));
     }
   };
 
@@ -63,7 +107,7 @@ const Login = () => {
           <CustomInput
             key={item.id}
             placeholder={item.placeholder}
-            // marginTop={heightDP(index === 0 ? 40 : 20)}
+            marginTop={heightDP(index === 0 ? 40 : 20)}
             secureTextEntry={item.secureTextEntry}
             value={item.value}
             onChangeText={item.onChangeText}
