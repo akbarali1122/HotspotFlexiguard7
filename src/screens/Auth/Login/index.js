@@ -44,7 +44,7 @@ const Login = () => {
       errorMessage: passwordError,
     },
   ];
-  const isAuth = 'Cnl0rzoLbue9HWCX5mIl3zE3gsWioJO6BHGHsMHQo9o5ry1dy6SBeIidJpx9';
+
   const handleLogin = async () => {
     const payload = {
       email: userName,

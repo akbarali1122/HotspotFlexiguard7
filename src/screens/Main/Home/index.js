@@ -13,7 +13,6 @@ import {COLORS} from '../../../utils/config';
 import {Fonts} from '../../../utils/fonts';
 import {heightDP, widthDP} from '../../../utils/Responsive';
 import Icons from '../../../components/Layout/CustomIcons/Icons';
-import {Images} from '../../../assets/images/pngs';
 import SpeedCard from './SpeedCard';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import RNSimpleOpenvpn, {
@@ -152,10 +151,10 @@ const Home = () => {
 
   const handleVPN = () => {
     if (selectedItem) {
-      alert('selectedItem');
+      // alert('selectedItem');
       return selectedItem?.file_name;
     } else {
-      alert('freeServer');
+      // alert('freeServer');
       return freeServer?.file_name;
     }
   };
@@ -231,10 +230,6 @@ const Home = () => {
       color3="#0E1E2E"
       isHomeScreen
       isHeader
-      isVipUser
-      source={selectedServer ? Images.ball : Images.vip}
-      title={selectedServer ? selectedServer : 'Select Server'}
-      subtitle={!selectedServer && 'Unlock all the servers'}
       onPress={handleNavigationPress}>
       <View
         style={{

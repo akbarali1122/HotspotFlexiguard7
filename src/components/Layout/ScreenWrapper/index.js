@@ -23,7 +23,7 @@ const ScreenWrapper = ({
   const navigation = useNavigation();
   const {loginData} = useSelector(state => state.user);
 
-  // console.log('loginData.access_to===', loginData.access_to);
+  // console.log('loginData.access_to=====', loginData.access_to);
   return (
     <LinearGradient
       colors={[color1, color2, color3]}
@@ -44,12 +44,12 @@ const ScreenWrapper = ({
               navigation.navigate('Account');
             }}>
             <CustomImage
-              source={Images.profile}
-              resizeMode="contain"
+              source={{uri: loginData?.picture} || Images.profile}
+              resizeMode="cover"
               style={styles.icon}
             />
           </TouchableOpacity>
-          {loginData.access_to === 'pro' && (
+          {loginData?.access_to === 'pro' && (
             <TouchableOpacity onPress={onVipPress}>
               <CustomImage
                 source={Images.vip}
@@ -91,6 +91,7 @@ const styles = StyleSheet.create({
   icon: {
     height: widthDP(40),
     width: widthDP(40),
+    borderRadius: 100,
   },
   icon1: {
     height: widthDP(30),

@@ -56,7 +56,7 @@ const AppItem = () => {
       onPress: async () => {
         await AsyncStorage.removeItem('isAuth');
 
-        dispatch(setLoginData({}));
+        dispatch(setLoginData());
         dispatch(setLoading(false));
         navigation.navigate('AuthStack');
       },
