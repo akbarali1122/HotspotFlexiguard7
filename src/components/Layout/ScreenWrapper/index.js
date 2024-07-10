@@ -54,6 +54,7 @@ const ScreenWrapper = ({
               <CustomImage
                 source={Images.vip}
                 resizeMode="contain"
+                tintColor={COLORS.theme}
                 style={styles.icon1}
               />
             </TouchableOpacity>
