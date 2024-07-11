@@ -6,7 +6,7 @@ import CustomInput from '../../../components/Layout/CustomInput/CustomInput';
 import {heightDP} from '../../../utils/Responsive';
 import {COLORS} from '../../../utils/config';
 import {useDispatch, useSelector} from 'react-redux';
-import {Platform} from 'react-native';
+import {Keyboard, Platform} from 'react-native';
 import {setLoading, setLoginData} from '../../../redux/userSlice/user.Slice';
 import {LoginUser} from '../../../services';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -73,7 +73,8 @@ const Login = () => {
           dispatch(setLoading(true));
           console.log('res=======', res);
           if (res?.status === 'fail') {
-            alert('error', `${res?.message}`);
+            // alert('error', `${res?.message}`);
+            setPasswordError(`${res?.message}`);
           } else {
             dispatch(setLoginData(res?.data));
             navigation.reset({
@@ -89,11 +90,12 @@ const Login = () => {
         })
         .catch(error => {
           dispatch(setLoading(false));
-          console.log('error==========', error);
+          console.log('error==========>>>>>', error);
           if (error.code === 'ERR_NETWORK') {
             alert('error', 'Network request failed. Please try again later');
           } else if (error) {
-            alert('error', `Invalid email or password`);
+            // alert('Invalid email or password');
+            setPasswordError('Invalid email or password');
           }
         });
       dispatch(setLoading(false));

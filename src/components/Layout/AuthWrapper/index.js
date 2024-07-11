@@ -57,7 +57,7 @@ const AuthWrapper = ({
           />
         </KeyboardAwareScrollView>
 
-        <View style={styles.bottomContainer}>
+        {/* <View style={styles.bottomContainer}>
           <CustomText
             label={bottomText}
             fontFamily={Fonts.PoppinsMedium}
@@ -70,7 +70,7 @@ const AuthWrapper = ({
             fontFamily={Fonts.PoppinsBold}
             fontSize={14}
           />
-        </View>
+        </View> */}
       </View>
     </CustomStatusBar>
   );

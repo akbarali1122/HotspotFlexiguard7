@@ -8,6 +8,8 @@ import {heightDP, widthDP} from '../../../utils/Responsive';
 import {COLORS} from '../../../utils/config';
 import LinearGradient from 'react-native-linear-gradient';
 import {useSelector} from 'react-redux';
+import CustomText from '../CusromText/CustomText';
+import Icons from '../CustomIcons/Icons';
 
 const ScreenWrapper = ({
   children,
@@ -18,7 +20,10 @@ const ScreenWrapper = ({
   color2,
   color3,
   isHomeScreen,
-  onVipPress,
+  onPress,
+  source,
+  title,
+  subtitle,
 }) => {
   const navigation = useNavigation();
   const {loginData} = useSelector(state => state.user);
@@ -50,14 +55,12 @@ const ScreenWrapper = ({
             />
           </TouchableOpacity>
           {loginData?.access_to === 'pro' && (
-            <TouchableOpacity onPress={onVipPress}>
-              <CustomImage
-                source={Images.vip}
-                resizeMode="contain"
-                tintColor={COLORS.theme}
-                style={styles.icon1}
-              />
-            </TouchableOpacity>
+            <CustomImage
+              source={Images.vip}
+              resizeMode="contain"
+              tintColor={COLORS.theme}
+              style={styles.icon1}
+            />
           )}
         </View>
       )}
@@ -73,7 +76,36 @@ const ScreenWrapper = ({
         ]}>
         {children}
       </KeyboardAwareScrollView>
-
+      {isHomeScreen && loginData?.access_to === 'pro' && (
+        <TouchableOpacity style={styles.bottomView} onPress={onPress}>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <View style={styles.Imageview}>
+              <CustomImage
+                source={source}
+                style={styles.vipImage}
+                resizeMode={'contain'}
+              />
+            </View>
+            <View style={{marginLeft: widthDP(30)}}>
+              <CustomText label={title} color={COLORS.white} fontSize={20} />
+              {subtitle && (
+                <CustomText
+                  label={subtitle}
+                  color={COLORS.white}
+                  fontSize={10}
+                />
+              )}
+            </View>
+          </View>
+          <Icons
+            family="AntDesign"
+            name="right"
+            size={13}
+            color={COLORS.white}
+            style={styles.rightIcon}
+          />
+        </TouchableOpacity>
+      )}
       {/* <Spacer /> */}
     </LinearGradient>
   );
@@ -117,9 +149,10 @@ const styles = StyleSheet.create({
     marginHorizontal: widthDP(20),
   },
   vipImage: {
-    width: widthDP(25),
-    height: heightDP(20),
-    backgroundColor: COLORS.black,
+    // width: widthDP(25),
+    // height: heightDP(25),
+    height: '60%',
+    width: '60%',
   },
   Imageview: {
     width: widthDP(40),
@@ -127,6 +160,6 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.black,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 30,
+    borderRadius: 100,
   },
 });

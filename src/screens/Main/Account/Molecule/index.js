@@ -19,35 +19,35 @@ const AppItem = () => {
       id: 1,
       text: 'Rate Us',
       onPress: () => {
-        // navigation.navigate('Setting');
+        alert('Rate Us');
       },
     },
     {
       id: 2,
       text: 'About Us',
       onPress: () => {
-        alert('Rate Us');
+        navigation.navigate('AboutUs');
       },
     },
     {
       id: 3,
       text: 'Terms Condition',
       onPress: () => {
-        // navigation.navigate('AboutUs');
+        navigation.navigate('TermsConditions');
       },
     },
     {
       id: 4,
       text: 'Privacy Policy',
       onPress: () => {
-        //   navigation.navigate('AboutUs');
+        navigation.navigate('Privacy');
       },
     },
     {
       id: 5,
       text: 'Security',
       onPress: () => {
-        //   navigation.navigate('AboutUs');
+        navigation.navigate('Security');
       },
     },
     {

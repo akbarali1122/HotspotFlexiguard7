@@ -29,6 +29,12 @@ export const ValidPassword = password => {
   // Test the password against the regular expression
   return re.test(password);
 };
+// export const ValidPassword = password => {
+//   var re =
+//     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$@!%&*?])[A-Za-z\d#$@!%&*?]{8,30}$/;
+
+//   return re.test(password);
+// };
 
 export const ovpnFile = `client
 dev tun

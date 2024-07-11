@@ -31,6 +31,7 @@ import {
   setVpnServers,
 } from '../../../redux/userSlice/user.Slice';
 import {GetOvpnFile} from '../../../services';
+import {Images} from '../../../assets/images/pngs';
 
 const Home = () => {
   const navigation = useNavigation();
@@ -39,6 +40,7 @@ const Home = () => {
   const intervalRef = useRef(null);
 
   const selectedItem = route?.params?.selectedItem;
+  // console.log('selectedItem============', selectedItem);
   // Redux state
   const {
     checkVPNConnect,
@@ -224,11 +226,12 @@ const Home = () => {
 
   return (
     <ScreenWrapper
-      onVipPress={handleNavigationPress}
       color1="#164958"
       color2="#0E1E2E"
       color3="#0E1E2E"
       isHomeScreen
+      title={selectedItem ? selectedItem.country : 'Select Server'}
+      source={selectedItem ? Images.ball : Images.vip}
       isHeader
       onPress={handleNavigationPress}>
       <View
