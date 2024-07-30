@@ -28,7 +28,7 @@ const ScreenWrapper = ({
   const navigation = useNavigation();
   const {loginData} = useSelector(state => state.user);
 
-  // console.log('loginData.access_to=====', loginData.access_to);
+  // console.log('loginData?.picture====', loginData?.picture);
   return (
     <LinearGradient
       colors={[color1, color2, color3]}
@@ -36,7 +36,6 @@ const ScreenWrapper = ({
       end={{x: 1, y: 0.5}}
       style={{
         flex: 1,
-        // paddingHorizontal: widthDP(20),
       }}>
       <StatusBar
         barStyle="light-content"
@@ -49,7 +48,11 @@ const ScreenWrapper = ({
               navigation.navigate('Account');
             }}>
             <CustomImage
-              source={{uri: loginData?.picture} || Images.profile}
+              source={
+                loginData?.picture?.length > 52
+                  ? {uri: loginData?.picture}
+                  : Images.profile
+              }
               resizeMode="cover"
               style={styles.icon}
             />

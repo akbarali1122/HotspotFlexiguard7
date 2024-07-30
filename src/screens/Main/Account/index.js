@@ -73,10 +73,10 @@ const Account = () => {
       // console.log('response=====', res.data);
 
       if (res.data.status === 'success') {
-        Alert.alert(
-          'Profile Updated',
-          'Your profile has been updated successfully.',
-        );
+        // Alert.alert(
+        //   'Profile Updated',
+        //   'Your profile has been updated successfully.',
+        // );
         dispatch(setLoginData(res?.data?.data));
         // navigation.goBack();
       } else {
@@ -97,8 +97,12 @@ const Account = () => {
       <View style={styles.profile}>
         <TouchableOpacity style={styles.imagview} onPress={pickImage}>
           <CustomImage
-            source={{uri: loginData?.picture} || Images.profile}
-            resizeMode="contain"
+            source={
+              loginData?.picture?.length > 52
+                ? {uri: loginData?.picture}
+                : Images.profile
+            }
+            resizeMode="cover"
             style={{height: '100%', width: '100%', borderRadius: 100}}
           />
           <Icons

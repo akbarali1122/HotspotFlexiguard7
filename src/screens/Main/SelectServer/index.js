@@ -2,7 +2,6 @@ import {FlatList, StyleSheet, Text, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {COLORS} from '../../../utils/config';
 import {heightDP, widthDP} from '../../../utils/Responsive';
-import {SafeAreaView} from 'react-native-safe-area-context';
 import CustomHeader from '../../../components/Layout/CustomHeader';
 import CustomInput from '../../../components/Layout/CustomInput/CustomInput';
 import ServerList from '../../../components/Layout/ServerCard';
