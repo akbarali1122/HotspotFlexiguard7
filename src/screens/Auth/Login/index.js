@@ -59,11 +59,9 @@ const Login = () => {
       return setUserNameError('Please enter valid email (example@gmail.com)');
     } else if (!password) {
       return setPasswordError('Please Enter password');
-    }
-    // else if (password.length <= 7) {
-    //   return setPasswordError('Password should be greater then 8 letters');
-    // }
-    else if (!ValidPassword(password?.trim())) {
+    } else if (password.length <= 5) {
+      return setPasswordError('Wrong Password');
+    } else if (!ValidPassword(password?.trim())) {
       return setPasswordError('Wrong Password');
     } else {
       dispatch(setLoading(true));
